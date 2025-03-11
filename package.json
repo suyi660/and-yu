@@ -1,0 +1,43 @@
+{
+  "name": "and-yu",
+  "version": "1.0.0",
+  "description": "yu",
+  "module": "./es/index",
+  "main": "./lib/index",
+  "types": "./es/index.d.ts",
+  "repository": "git@github.com:suyi660/and-yu.git",
+  "scripts": {
+    "dev": "father dev",
+    "build": "father build",
+    "build:deps": "father prebundle",
+    "prepublishOnly": "father doctor && npm run build"
+  },
+  "keywords": [],
+  "authors": [
+    "yu"
+  ],
+  "license": "MIT",
+  "files": [
+    "es",
+    "lib"
+  ],
+  "devDependencies": {
+    "@rc-component/father-plugin": "^2.0.4",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "babel-plugin-import": "^1.13.8",
+    "father": "^4.5.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.26.9",
+    "ahooks": "^3.8.4",
+    "classnames": "^2.5.1",
+    "zustand": "^5.0.3"
+  },
+  "peerDependencies":{
+    "antd": ">=5.13.0",
+    "react": ">=18.2",
+    "react-dom": ">=18.2"
+  }
+}
