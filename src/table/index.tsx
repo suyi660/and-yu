@@ -21,6 +21,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         manual = false,
         nostyle,
         url,
+        useQuerystring,
         params: urlParams,
         columns,
         form = {},
@@ -50,6 +51,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     const { data = {}, loading, mutate } = useFetch(url, {
         method,
+        useQuerystring,
         onBefore,
         json: ProTable.getQuery({
             page,

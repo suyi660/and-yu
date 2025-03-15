@@ -63,6 +63,8 @@ export interface ProTableProps<Tdata = any> {
     tableClassName?: string;
     //api url
     url: string;
+    //是否强制在url上传递参数
+    useQuerystring?: boolean;
     //Table.useTable()实例,  返回状态库，常用方法
     table: TableInstance<Tdata> | null;
     rowKey: string | ((record: RecordType, index?: number) => string);

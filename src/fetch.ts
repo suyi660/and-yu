@@ -10,12 +10,14 @@ export interface RqInit {
     handleLogout?: (response: any) => void;
     headers?: DefaultHeaders;
     returnData?: boolean;
+    useQuerystring?: boolean;
 }
 export interface RequestOptions extends RequestInit {
     json?: Record<string, any>;
     data?: Record<string, any>;
     closeError?: boolean;
     returnData?: boolean;
+    useQuerystring?: boolean;
 }
 export const isObject = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Object]';
 export const isFunction = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Function]';
@@ -31,6 +33,7 @@ class Rq {
         handleError: undefined,
         headers: undefined,
         returnData: true,
+        useQuerystring: false,
     } as RqInit;
     constructor(options?: RqInit) {
         if (options) {
@@ -93,6 +96,10 @@ class Rq {
                 url = this.createQueryUrl(url, options.json as Record<string, string>);
             }
         } else {
+            if (options.useQuerystring){
+                url = this.createQueryUrl(url, options.json as Record<string, string>);
+                options.json = undefined;
+            }
             if (options.json) {
                 if (options.json instanceof FormData) {
                     options.headers.delete('Content-Type');

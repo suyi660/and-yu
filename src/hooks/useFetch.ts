@@ -12,11 +12,12 @@ interface UseRequestOption extends Options<Obj, any[]> {
     json?: Obj;
     data?: Obj;
     method?: Method;
+    useQuerystring?: boolean;
 }
 
 const rq = new Rq();
 const useFetch = <TData = Obj>(url: string, options?: UseRequestOption): Result<TData, any[]> => {
-    const { closeError, returnData, method, json, data, ...others } = options || {};
+    const { closeError, returnData, method, useQuerystring, json, data, ...others } = options || {};
 
     const fetcher: Service<any, any> = (fetcherData?: Obj, fetcherOptions?: RequestOptions) => {
         if (isObject(fetcherData) && Object.prototype.hasOwnProperty.call(fetcherData, "nativeEvent")) {
@@ -24,7 +25,7 @@ const useFetch = <TData = Obj>(url: string, options?: UseRequestOption): Result<
         }
         const body = fetcherData ? fetcherData : json || data;
 
-        fetcherOptions = Object.assign({}, { json: body, returnData, method, }, fetcherOptions || {},);
+        fetcherOptions = Object.assign({}, { json: body, returnData, method, useQuerystring }, fetcherOptions || {},);
         return rq.request(url, fetcherOptions);
     };
 
