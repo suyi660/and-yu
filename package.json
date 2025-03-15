@@ -1,6 +1,6 @@
 {
   "name": "and-yu",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "yu",
   "module": "./es/index",
   "main": "./lib/index",
@@ -8,7 +8,7 @@
   "repository": "git@github.com:suyi660/and-yu.git",
   "scripts": {
     "dev": "father dev",
-    "build": "father build",
+    "build": "sudo father build",
     "build:deps": "father prebundle",
     "prepublishOnly": "father doctor && npm run build"
   },

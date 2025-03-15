@@ -1,9 +1,6 @@
-import type { FormInstance, TableColumnType, GetProp, TableProps } from 'antd';
+import type { FormInstance, TableColumnType, TableProps } from 'antd';
 import type { Method } from '../hooks/useFetch'
 
-
-type RowSelectionType = GetProp<TableProps, 'rowSelection'>;
-type ExpandableType = GetProp<TableProps, 'expandable'>;
 type RecordType = Record<string, any>;
 
 interface SorterType {
@@ -58,16 +55,15 @@ interface FormProps {
 }
 
 
-export interface ProTableProps<Tdata = any> {
-    className?: string;
+export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'columns'> {
     tableClassName?: string;
-    //api url
+    // api url
     url: string;
     //是否强制在url上传递参数
     useQuerystring?: boolean;
     //Table.useTable()实例,  返回状态库，常用方法
     table: TableInstance<Tdata> | null;
-    rowKey: string | ((record: RecordType, index?: number) => string);
+    // rowKey: string | ((record: RecordType, index?: number) => string);
     //antd locale 国际化
     locale?: Record<string, any>;
     //后端数据列表的键名，例如：'data'、'list.data'   {code: 0, data: {  }, message: '11'}, 默认使用的是data
@@ -83,10 +79,6 @@ export interface ProTableProps<Tdata = any> {
     //antd table columns 支持函数返回一个列数组:参数data api返回数据,  一般使用function 时用于根据data，动态生成列
     columns: ((data: Tdata) => TableColumnType<unknown>[]) | TableColumnType<unknown>[];
     form?: FormProps;
-    //antd rowSelection
-    rowSelection?: RowSelectionType;
-    //antd expandable
-    expandable?: ExpandableType;
     //统计提示
     alert?: React.ReactNode | ((data: Tdata) => React.ReactNode);
     //操作按钮组,独立成一行

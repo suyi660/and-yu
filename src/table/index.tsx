@@ -9,6 +9,7 @@ import useX from '../hooks/useX';
 import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
 import './style.css'
 
+
 const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const {
         className = 'main-container',
@@ -25,23 +26,23 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         params: urlParams,
         columns,
         form = {},
-        rowSelection,
         alert,
         toolbar = null,
-        expandable,
         pageSizeOptions = [10, 20, 50, 100],
         onBefore,
         pagination,
         loadingDelay = 300,
         method,
+        scroll,
+        ...prop
     } = props;
 
     const wrapperClass = cn({
         [className]: !nostyle,
     })
-    const formClass = cn('search-form', {
+    const formClass = form ? cn('search-form', {
         [form.className]: form.className,
-    })
+    }) : '';
     const tableClass = cn('search-form', {
         [tableClassName]: tableClassName,
     })
@@ -80,7 +81,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     }, [columns, data, dataKey, totalKey]);
 
     const onSearch = () => {
-        if (form.items) {
+        if (form?.items) {
             table.form.submit();
         } else {
             toggle();
@@ -92,7 +93,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             sorter: {},
         });
 
-        if (form.items) {
+        if (form?.items) {
             if (form.onResetBefore && form.onResetBefore() === false) return;
             table.form.resetFields();
             if (form.reset === undefined || form.reset === true) {
@@ -106,7 +107,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         table.clear = () => mutate({});
         table.refresh = toggle;
         table.reset = () => {
-            if (form.items) {
+            if (form?.items) {
                 onReset();
             }
         };
@@ -118,7 +119,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     useMount(() => {
         if (manual) return;
-        if (form.items) {
+        if (form?.items) {
             table.form.submit();
         } else {
             toggle();
@@ -146,10 +147,11 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         toggle();
     };
     const x = useX(column);
+    const y = scroll?.y;
 
     return (
         <div className={wrapperClass}>
-            {form.items && (
+            {form?.items && (
                 <div
                     className={formClass}
                     style={{ display: 'flex', justifyContent: 'space-between', }}
@@ -180,11 +182,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                 <Table
                     columns={column}
                     loading={loading}
-                    scroll={{ x }}
+                    scroll={{ x, y }}
                     locale={locale}
-                    rowKey={rowKey as any}
-                    expandable={expandable}
-                    rowSelection={rowSelection}
                     onChange={(p, _, sorter) => tableChange(p, sorter)}
                     pagination={{
                         current: page,
@@ -199,6 +198,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                         },
                     }}
                     dataSource={dataSource}
+                    {...prop}
                 />
             </div>
         </div>
