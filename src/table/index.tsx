@@ -15,7 +15,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         className = 'main-container',
         tableClassName = 'main-table',
         table,
-        rowKey,
         locale,
         dataKey = 'data',
         totalKey = 'total',
