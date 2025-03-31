@@ -6,7 +6,7 @@ import type { RqInit, RequestOptions } from '../fetch'
 type Obj = Record<string, unknown>;
 export type Method = "get" | "post" | "put" | "delete" | "patch" | undefined | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-interface UseRequestOption extends Options<Obj, any[]> {
+interface UseRequestOption<TData = any> extends Options<TData, any[]> {
     closeError?: boolean;
     returnData?: boolean;
     json?: Obj;
@@ -16,7 +16,7 @@ interface UseRequestOption extends Options<Obj, any[]> {
 }
 
 const rq = new Rq();
-const useFetch = <TData = Obj>(url: string, options?: UseRequestOption): Result<TData, any[]> => {
+const useFetch = <TData = any>(url: string, options?: UseRequestOption<TData>): Result<TData, any[]> => {
     const { closeError, returnData, method, useQuerystring, json, data, ...others } = options || {};
 
     const fetcher: Service<any, any> = (fetcherData?: Obj, fetcherOptions?: RequestOptions) => {
