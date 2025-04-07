@@ -164,10 +164,10 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                         {form.items}
                         <Form.Item>
                             <Space>
-                                <Button type="primary" htmlType="submit">
+                                <Button type="primary" loading={loading} htmlType="submit">
                                     查询
                                 </Button>
-                                <Button onClick={onReset}>重置</Button>
+                                <Button onClick={onReset} disabled={loading}>重置</Button>
                                 {form.extra}
                             </Space>
                         </Form.Item>
