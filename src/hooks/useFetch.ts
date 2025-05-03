@@ -9,8 +9,8 @@ export type Method = "get" | "post" | "put" | "delete" | "patch" | undefined | '
 interface UseRequestOption<TData = any> extends Options<TData, any[]> {
     closeError?: boolean;
     returnData?: boolean;
-    json?: Obj;
-    data?: Obj;
+    json?: Obj | any[];
+    data?: Obj | any[];
     method?: Method;
     useQuerystring?: boolean;
 }

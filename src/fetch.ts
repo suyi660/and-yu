@@ -13,8 +13,8 @@ export interface RqInit {
     useQuerystring?: boolean;
 }
 export interface RequestOptions extends RequestInit {
-    json?: Record<string, any>;
-    data?: Record<string, any>;
+    json?: Record<string, any> | any[];
+    data?: Record<string, any> | any[];
     closeError?: boolean;
     returnData?: boolean;
     useQuerystring?: boolean;
