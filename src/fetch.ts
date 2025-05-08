@@ -83,7 +83,18 @@ class Rq {
         }
         return headers;
     }
-
+    get(url: string, options?: RequestOptions) {
+        return this.request(url, { method: 'GET', ...options });
+    }
+    post(url: string, options?: RequestOptions) {
+        return this.request(url, { method: 'POST', ...options });
+    }
+    delete(url: string, options?: RequestOptions) {
+        return this.request(url, { method: 'DELETE', ...options });
+    }
+    put(url: string, options?: RequestOptions) {
+        return this.request(url, { method: 'PUT', ...options });
+    }
     async request(url: string, options?: RequestOptions) {
         if (!options) options = {};
         const headers = this.handleDefaultHeader();
@@ -96,7 +107,7 @@ class Rq {
                 url = this.createQueryUrl(url, options.json as Record<string, string>);
             }
         } else {
-            if (options.useQuerystring){
+            if (options.useQuerystring) {
                 url = this.createQueryUrl(url, options.json as Record<string, string>);
                 options.json = undefined;
             }
