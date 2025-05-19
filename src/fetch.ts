@@ -51,7 +51,10 @@ class Rq {
         if (typeof url !== 'string') {
             throw new Error('url must be string');
         }
-        return `${this.options.baseUrl}${url}`;
+        const baseUrl = this.options.baseUrl;
+        const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+        const normalizedUrl = url.charAt(0) === '/' ? url.slice(1) : url;
+        return normalizedBaseUrl + normalizedUrl;
     }
 
     createQueryUrl(url: string, query: Record<string, string>) {
