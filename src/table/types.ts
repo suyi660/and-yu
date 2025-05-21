@@ -40,7 +40,7 @@ interface FormProps {
     //form左侧标题
     title?: React.ReactNode;
     //form items 表单项
-    items?: React.ReactNode;
+    formItem?: React.ReactNode;
     //扩展内容  放在查询，重置 后方
     extra?: React.ReactNode;
     //表单右侧ui

@@ -80,7 +80,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     }, [columns, data, dataKey, totalKey]);
 
     const onSearch = () => {
-        if (form?.items) {
+        if (form?.formItem) {
             table.form.submit();
         } else {
             toggle();
@@ -92,7 +92,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             sorter: {},
         });
 
-        if (form?.items) {
+        if (form?.formItem) {
             if (form.onResetBefore && form.onResetBefore() === false) return;
             table.form.resetFields();
             if (form.reset === undefined || form.reset === true) {
@@ -106,7 +106,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         table.clear = () => mutate({});
         table.refresh = toggle;
         table.reset = () => {
-            if (form?.items) {
+            if (form?.formItem) {
                 onReset();
             }
         };
@@ -118,7 +118,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     useMount(() => {
         if (manual) return;
-        if (form?.items) {
+        if (form?.formItem) {
             table.form.submit();
         } else {
             toggle();
@@ -150,7 +150,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     return (
         <div className={wrapperClass}>
-            {form?.items && (
+            {form?.formItem && (
                 <div
                     className={formClass}
                     style={{ display: 'flex', justifyContent: 'space-between', }}
@@ -161,7 +161,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                         layout="inline"
                         onFinish={onFinish}>
                         {form.title && <Form.Item>{form.title}</Form.Item>}
-                        {form.items}
+                        {form.formItem}
                         <Form.Item>
                             <Space>
                                 <Button type="primary" loading={loading} htmlType="submit">

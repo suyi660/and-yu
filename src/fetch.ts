@@ -6,8 +6,8 @@ export interface RqInit {
     successfulStatusCode?: number[];
     logoutStatusCodes?: number[];
     silentErrorCodes?: number[];
-    handleError?: (response: any) => void;
-    handleLogout?: (response: any) => void;
+    onError?: (error: any) => void;
+    onLogout?: (error: any) => void;
     headers?: DefaultHeaders;
     returnData?: boolean;
     useQuerystring?: boolean;
@@ -29,8 +29,8 @@ class Rq {
         successfulStatusCode: [200],
         logoutStatusCodes: [401, 402, 403],
         silentErrorCodes: [],
-        handleLogout: undefined,
-        handleError: undefined,
+        onLogout: undefined,
+        onError: undefined,
         headers: undefined,
         returnData: true,
         useQuerystring: false,
@@ -154,13 +154,13 @@ class Rq {
             }
 
             if (this.options.logoutStatusCodes.includes(data?.code)) {
-                this.options.handleLogout?.(data);
+                this.options.onLogout?.(data);
             }
 
-            this.options.handleError?.(data);
+            this.options.onError?.(data);
             return Promise.reject(data)
         } catch (error) {
-            this.options.handleError?.(error);
+            this.options.onError?.(error);
             return Promise.reject(error);
         }
 
