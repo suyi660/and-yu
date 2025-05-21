@@ -3,19 +3,21 @@ type DefaultHeaders = Record<string, any> | Func | HeadersInit;
 export interface RqInit {
     baseUrl?: string;
     blobFileTypes?: string[];
-    successfulStatusCode?: number[];
-    logoutStatusCodes?: number[];
-    silentErrorCodes?: number[];
     onError?: (error: any) => void;
     onLogout?: (error: any) => void;
     headers?: DefaultHeaders;
     returnData?: boolean;
     useQuerystring?: boolean;
+    code?: {
+        success?: number[];
+        logout?:  number[];
+        ignoreError?: number[];
+    }
 }
 export interface RequestOptions extends RequestInit {
     json?: Record<string, any> | any[];
     data?: Record<string, any> | any[];
-    closeError?: boolean;
+    ignoreError?: boolean;
     returnData?: boolean;
     useQuerystring?: boolean;
 }
@@ -26,9 +28,11 @@ class Rq {
     options = {
         baseUrl: '',
         blobFileTypes: ['stream', 'excel', 'download', 'blob'],
-        successfulStatusCode: [200],
-        logoutStatusCodes: [401, 402, 403],
-        silentErrorCodes: [],
+        code: {
+            success: [200],
+            logout: [403],
+            ignoreError: [],
+        },
         onLogout: undefined,
         onError: undefined,
         headers: undefined,
@@ -140,8 +144,9 @@ class Rq {
             }
 
             const data = await response.json();
-
-            if (this.options.successfulStatusCode.includes(data?.code)) {
+            const successCode = this.options.code?.success || [];
+            const logoutCode = this.options.code?.logout || [];
+            if (successCode.includes(data?.code)) {
                 if (this.options.returnData === false || options.returnData === false) {
                     return data;
                 } else {
@@ -149,11 +154,11 @@ class Rq {
                 }
             }
 
-            if (options.closeError || this.options.successfulStatusCode.includes(data?.code)) {
+            if (options.ignoreError || successCode.includes(data?.code)) {
                 return Promise.reject(data);
             }
 
-            if (this.options.logoutStatusCodes.includes(data?.code)) {
+            if (logoutCode.includes(data?.code)) {
                 this.options.onLogout?.(data);
             }
 
