@@ -40,6 +40,8 @@ interface FormProps {
     //form左侧标题
     title?: React.ReactNode;
     //form items 表单项
+    /** @deprecated 此属性已废弃，请使用新的formItem属性代替 */
+    items? : React.ReactNode[];
     formItem?: React.ReactNode;
     //扩展内容  放在查询，重置 后方
     extra?: React.ReactNode;

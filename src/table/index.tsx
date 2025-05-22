@@ -35,7 +35,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         scroll,
         ...prop
     } = props;
-
     const wrapperClass = cn({
         [className]: !nostyle,
     })
@@ -45,6 +44,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const tableClass = cn('search-form', {
         [tableClassName]: tableClassName,
     })
+    const formItem = form?.formItem || form?.items;
 
     const [ready, { toggle }] = useToggle();
     const { page, size, sorter, search, setState } = table.useStore();
@@ -80,7 +80,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     }, [columns, data, dataKey, totalKey]);
 
     const onSearch = () => {
-        if (form?.formItem) {
+        if (formItem) {
             table.form.submit();
         } else {
             toggle();
@@ -92,7 +92,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             sorter: {},
         });
 
-        if (form?.formItem) {
+        if (formItem) {
             if (form.onResetBefore && form.onResetBefore() === false) return;
             table.form.resetFields();
             if (form.reset === undefined || form.reset === true) {
@@ -106,7 +106,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         table.clear = () => mutate({});
         table.refresh = toggle;
         table.reset = () => {
-            if (form?.formItem) {
+            if (formItem) {
                 onReset();
             }
         };
@@ -118,7 +118,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     useMount(() => {
         if (manual) return;
-        if (form?.formItem) {
+        if (formItem) {
             table.form.submit();
         } else {
             toggle();
@@ -150,7 +150,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     return (
         <div className={wrapperClass}>
-            {form?.formItem && (
+            {formItem && (
                 <div
                     className={formClass}
                     style={{ display: 'flex', justifyContent: 'space-between', }}
@@ -161,7 +161,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                         layout="inline"
                         onFinish={onFinish}>
                         {form.title && <Form.Item>{form.title}</Form.Item>}
-                        {form.formItem}
+                        {formItem}
                         <Form.Item>
                             <Space>
                                 <Button type="primary" loading={loading} htmlType="submit">

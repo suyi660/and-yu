@@ -104,6 +104,7 @@ class Rq {
     }
     async request(url: string, options?: RequestOptions) {
         if (!options) options = {};
+        const ignoreError = options.ignoreError;
         const headers = this.handleDefaultHeader();
         options.headers = new Headers({ ...Object.fromEntries(headers), ...options.headers });
         options.method = options.method ?? 'POST';
@@ -146,6 +147,7 @@ class Rq {
             const data = await response.json();
             const successCode = this.options.code?.success || [];
             const logoutCode = this.options.code?.logout || [];
+            const ignoreErrorCode = this.options.code?.ignoreError || [];
             if (successCode.includes(data?.code)) {
                 if (this.options.returnData === false || options.returnData === false) {
                     return data;
@@ -153,15 +155,12 @@ class Rq {
                     return data.hasOwnProperty('data') ? data.data : data;
                 }
             }
-
-            if (options.ignoreError || successCode.includes(data?.code)) {
+            if (ignoreError || ignoreErrorCode.includes(data?.code)) {
                 return Promise.reject(data);
             }
-
             if (logoutCode.includes(data?.code)) {
                 this.options.onLogout?.(data);
             }
-
             this.options.onError?.(data);
             return Promise.reject(data)
         } catch (error) {
