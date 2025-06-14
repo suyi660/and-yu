@@ -1,6 +1,6 @@
 type Func = () => Record<string, any>;
 type DefaultHeaders = Record<string, any> | Func | HeadersInit;
-export interface RqInit {
+export interface QueryInit {
     baseUrl?: string;
     blobFileTypes?: string[];
     onError?: (error: any) => void;
@@ -14,7 +14,7 @@ export interface RqInit {
         ignoreError?: number[];
     }
 }
-export interface RequestOptions extends RequestInit {
+export interface QueryOptions extends RequestInit {
     json?: Record<string, any> | any[];
     data?: Record<string, any> | any[];
     ignoreError?: boolean;
@@ -38,16 +38,16 @@ class Query {
         headers: undefined,
         returnData: true,
         useQuerystring: false,
-    } as RqInit;
-    constructor(options?: RqInit) {
+    } as QueryInit;
+    constructor(options?: QueryInit) {
         if (options) {
             this.options = Object.assign(this.options, options);
         }
     }
-    static create(options: RqInit) {
-        return new Rq(options);
+    static create(options: QueryInit) {
+        return new Query(options);
     }
-    config(options: RqInit) {
+    config(options: QueryInit) {
         if (!isObject(options)) throw new Error('options must be object {}');
         this.options = Object.assign(this.options, options);
     }
@@ -90,19 +90,19 @@ class Query {
         }
         return headers;
     }
-    get(url: string, options?: RequestOptions) {
+    get(url: string, options?: QueryOptions) {
         return this.request(url, { method: 'GET', ...options });
     }
-    post(url: string, options?: RequestOptions) {
+    post(url: string, options?: QueryOptions) {
         return this.request(url, { method: 'POST', ...options });
     }
-    delete(url: string, options?: RequestOptions) {
+    delete(url: string, options?: QueryOptions) {
         return this.request(url, { method: 'DELETE', ...options });
     }
-    put(url: string, options?: RequestOptions) {
+    put(url: string, options?: QueryOptions) {
         return this.request(url, { method: 'PUT', ...options });
     }
-    async request(url: string, options?: RequestOptions) {
+    async request(url: string, options?: QueryOptions) {
         if (!options) options = {};
         const ignoreError = options.ignoreError;
         const headers = this.handleDefaultHeader();
