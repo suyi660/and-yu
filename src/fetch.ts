@@ -24,7 +24,7 @@ export interface RequestOptions extends RequestInit {
 export const isObject = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Object]';
 export const isFunction = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Function]';
 
-class Rq {
+class Query {
     options = {
         baseUrl: '',
         blobFileTypes: ['stream', 'excel', 'download', 'blob'],
@@ -189,4 +189,4 @@ export const downloadfile = (res: any) => {
     a.remove();
 }
 
-export default Rq;
+export default Query;

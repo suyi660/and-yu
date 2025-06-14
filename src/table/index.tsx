@@ -9,7 +9,6 @@ import useX from '../hooks/useX';
 import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
 import './style.css'
 
-
 const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const {
         className = 'main-container',
@@ -21,7 +20,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         manual = false,
         nostyle,
         url,
-        useQuerystring,
         params: urlParams,
         columns,
         form = {},
@@ -51,7 +49,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     const { data = {}, loading, mutate } = useFetch(url, {
         method,
-        useQuerystring,
         onBefore,
         json: ProTable.getQuery({
             page,
