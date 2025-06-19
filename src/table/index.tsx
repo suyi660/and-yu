@@ -1,18 +1,33 @@
-import { useRef, useMemo } from 'react';
-import cn from 'classnames';
 import type { ProTableProps, UseTableProps, TableRef, TableState, } from './types';
+import { create, } from 'zustand';
+import { useRef, useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useToggle, useUpdate, useUpdateEffect } from 'ahooks';
-import { create, } from 'zustand';
+import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
 import useFetch from '../hooks/useFetch';
 import useX from '../hooks/useX';
-import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
 import './style.css'
 
+const defaultClassNames = {
+    root: 'main-container',
+    form: 'search-form',
+    table: 'main-table',
+}
+const defaultStyles = {
+    root: {},
+    form: {
+        display: 'flex',
+        justifyContent: 'space-between',
+    },
+    table: {},
+    toolbar: {
+        marginBottom: 15,
+    },
+};
 const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const {
-        className = 'main-container',
-        tableClassName = 'main-table',
+        classNames = defaultClassNames,
+        styles = defaultStyles,
         table,
         locale,
         dataKey = 'data',
@@ -33,17 +48,21 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         scroll,
         ...prop
     } = props;
-    const wrapperClass = cn({
-        [className]: !nostyle,
-    })
-    const formClass = form ? cn('search-form', {
-        [form.className]: form.className,
-    }) : '';
-    const tableClass = cn('search-form', {
-        [tableClassName]: tableClassName,
-    })
-    const formItem = form?.formItem || form?.items;
 
+    const {
+        title: formTitle,
+        extra: formExtra,
+        right: formRight,
+        formItem,
+        items,
+        reset: formReset,
+        dataForm,
+        handleValues: formHandleValues,
+        onResetBefore: formOnResetBefore,
+        ...otherFormProps
+    } = form;
+
+    const formItems = formItem || items;
     const [ready, { toggle }] = useToggle();
     const { page, size, sorter, search, setState } = table.useStore();
 
@@ -67,17 +86,17 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         loadingDelay,
     });
 
-    const { dataSource, total, column, alertRender } = useMemo(() => {
+    const { dataSource, total, column, renderAlert } = useMemo(() => {
         return {
             column: typeof columns === 'function' ? columns(data as any) : columns,
             dataSource: getDataSource<T>(data as any, dataKey),
-            alertRender: typeof alert === 'function' ? alert(data as any) : alert,
+            renderAlert: typeof alert === 'function' ? alert(data as any) : alert,
             total: getTotal(totalKey, data)
         };
     }, [columns, data, dataKey, totalKey]);
 
     const onSearch = () => {
-        if (formItem) {
+        if (formItems) {
             table.form.submit();
         } else {
             toggle();
@@ -89,10 +108,10 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             sorter: {},
         });
 
-        if (formItem) {
-            if (form.onResetBefore && form.onResetBefore() === false) return;
+        if (formItems) {
+            if (formOnResetBefore?.() === false) return;
             table.form.resetFields();
-            if (form.reset === undefined || form.reset === true) {
+            if (formReset === undefined || formReset === true) {
                 table.form.submit();
             }
         }
@@ -103,7 +122,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         table.clear = () => mutate({});
         table.refresh = toggle;
         table.reset = () => {
-            if (formItem) {
+            if (formItems) {
                 onReset();
             }
         };
@@ -115,7 +134,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     useMount(() => {
         if (manual) return;
-        if (formItem) {
+        if (formItems) {
             table.form.submit();
         } else {
             toggle();
@@ -123,8 +142,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     });
 
     const onFinish = (values: Record<string, unknown>) => {
-        if (form.handleValues) {
-            values = form.handleValues(values);
+        if (formHandleValues) {
+            values = formHandleValues(values);
         }
         if (!values) return;
         setState({
@@ -145,57 +164,75 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const x = useX(column);
     const y = scroll?.y;
 
+    const renderTable = () => {
+        return (
+            <Table
+                columns={column}
+                loading={loading}
+                scroll={{ x, y }}
+                locale={locale}
+                onChange={(p, _, sorter) => tableChange(p, sorter)}
+                pagination={{
+                    current: page,
+                    pageSize: size,
+                    showQuickJumper: pagination ? pagination.showQuickJumper : true,
+                    showSizeChanger: pagination ? pagination.showSizeChanger : true,
+                    hideOnSinglePage: pagination ? pagination.hideOnSinglePage : false,
+                    pageSizeOptions,
+                    total,
+                    showTotal(total) {
+                        return `共 ${total} 条记录`;
+                    },
+                }}
+                dataSource={dataSource}
+                {...prop}
+            />
+        )
+    }
+
     return (
-        <div className={wrapperClass}>
-            {formItem && (
+        <div
+            className={classNames?.root ?? defaultClassNames.root}
+            style={styles.root} >
+            {!!formItems && (
                 <div
-                    className={formClass}
-                    style={{ display: 'flex', justifyContent: 'space-between', }}
+                    className={classNames?.form ?? defaultClassNames.form}
+                    style={styles.form}
                 >
                     <Form
-                        initialValues={form.initialValues as any}
                         form={table.form}
                         layout="inline"
-                        onFinish={onFinish}>
-                        {form.title && <Form.Item>{form.title}</Form.Item>}
-                        {formItem}
+                        onFinish={onFinish}
+                        {...otherFormProps}
+                    >
+                        {formTitle && <Form.Item>{formTitle}</Form.Item>}
+                        {formItems}
                         <Form.Item>
                             <Space>
                                 <Button type="primary" loading={loading} htmlType="submit">
                                     查询
                                 </Button>
                                 <Button onClick={onReset} disabled={loading}>重置</Button>
-                                {form.extra}
+                                {formExtra}
                             </Space>
                         </Form.Item>
                     </Form>
-                    {form.right}
+                    {formRight}
                 </div>
             )}
-            <div className={tableClass}>
-                {toolbar && <div className="toolbar">{toolbar}</div>}
-                {alertRender}
-                <Table
-                    columns={column}
-                    loading={loading}
-                    scroll={{ x, y }}
-                    locale={locale}
-                    onChange={(p, _, sorter) => tableChange(p, sorter)}
-                    pagination={{
-                        current: page,
-                        pageSize: size,
-                        showQuickJumper: pagination ? pagination.showQuickJumper : true,
-                        showSizeChanger: pagination ? pagination.showSizeChanger : true,
-                        hideOnSinglePage: pagination ? pagination.hideOnSinglePage : false,
-                        pageSizeOptions,
-                        total,
-                        showTotal(total) {
-                            return `共 ${total} 条记录`;
-                        },
-                    }}
-                    dataSource={dataSource}
-                    {...prop}
-                />
+            <div
+                className={classNames?.table ?? defaultClassNames.table}
+                style={styles.table}
+            >
+                {toolbar && <div style={styles.toolbar}>{toolbar}</div>}
+                {renderAlert}
+                {
+                    !!dataForm ?
+                        <Form {...dataForm}>
+                            {renderTable()}
+                        </Form> :
+                        renderTable()
+                }
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import type { FormInstance, TableColumnType, TableProps } from 'antd';
+import type { FormInstance, TableColumnType, TableProps, FormProps } from 'antd';
 import type { Method } from '../types'
 
 type RecordType = Record<string, any>;
@@ -35,13 +35,12 @@ export interface TableInstance<TData = any> {
     form?: FormInstance;
 }
 
-interface FormProps {
-    initialValues?: Record<string, any>;
+interface FormOptions extends Omit<FormProps, 'form' | 'title'> {
     //form左侧标题
     title?: React.ReactNode;
     //form items 表单项
     /** @deprecated 此属性已废弃，请使用新的formItem属性代替 */
-    items? : React.ReactNode[];
+    items?: React.ReactNode[];
     formItem?: React.ReactNode;
     //扩展内容  放在查询，重置 后方
     extra?: React.ReactNode;
@@ -49,16 +48,28 @@ interface FormProps {
     right?: React.ReactNode;
     //onfinish完成后处理表单值,必需返回值,如果返回false, 则后续不再执行
     handleValues?: (values: Record<string, any>) => any;
-    className?: string;
     //是否在点击重置按钮后自动提交表单重新搜索，默认true
     reset?: boolean;
     //重置前操作,如果返回false, 则后续不再执行
     onResetBefore?: () => void | boolean;
+
+    //数据列表表单属性 antd from props
+    dataForm?: FormProps,
 }
 
 
 export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'columns'> {
-    tableClassName?: string;
+    classNames?: {
+        root?: string;
+        form?: string;
+        table?: string;
+    }
+    styles?:{
+        root?: React.CSSProperties;
+        form?: React.CSSProperties;
+        table?: React.CSSProperties;
+        toolbar?: React.CSSProperties;
+    }
     // api url
     url: string;
     //Table.useTable()实例,  返回状态库，常用方法
@@ -78,7 +89,8 @@ export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'col
     params?: RecordType;
     //antd table columns 支持函数返回一个列数组:参数data api返回数据,  一般使用function 时用于根据data，动态生成列
     columns: ((data: Tdata) => TableColumnType<unknown>[]) | TableColumnType<unknown>[];
-    form?: FormProps;
+    //search表单form配置
+    form?: FormOptions;
     //统计提示
     alert?: React.ReactNode | ((data: Tdata) => React.ReactNode);
     //操作按钮组,独立成一行
