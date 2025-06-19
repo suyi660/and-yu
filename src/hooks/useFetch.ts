@@ -1,34 +1,32 @@
-import type { Options, Result, Service } from 'ahooks/lib/useRequest/src/types'
-import { useRequest } from 'ahooks'
-import Query, { downloadfile, isObject, } from '../fetch'
-import type { QueryInit, QueryOptions } from '../fetch'
+import { useRequest, } from 'ahooks'
+import { isObject, rq } from '../fetch'
+import type { RqInit, RqOptions, JsonData, UseFetchOption } from '../types'
+import type { Result, Service } from 'ahooks/lib/useRequest/src/types'
 
-type Obj = Record<string, unknown>;
-export type Method = "get" | "post" | "put" | "delete" | "patch" | undefined | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-interface UseRequestOption<TData = any> extends Options<TData, any[]> {
-    ignoreError?: boolean;
-    returnData?: boolean;
-    json?: Obj | any[];
-    method?: Method;
-}
+const useFetch = <TData = any>(url: string, options?: UseFetchOption<TData>): Result<TData, any[]> => {
+    const { ignoreError, returnData, method, json, data, ...others } = options || {};
+    let body = json ?? data;
 
-const query = new Query();
-const useFetch = <TData = any>(url: string, options?: UseRequestOption<TData>): Result<TData, any[]> => {
-    const { ignoreError, returnData, method, json, ...others } = options || {};
-    const fetcher: Service<any, any> = (fetcherData?: Obj, fetcherOptions?: QueryOptions) => {
+    const fetcher: Service<any, any> = (fetcherData?: JsonData, fetcherOptions?: RqOptions) => {
         if (isObject(fetcherData) && Object.prototype.hasOwnProperty.call(fetcherData, "nativeEvent")) {
             fetcherData = undefined;
         }
-        const body = fetcherData ?? json;
-        fetcherOptions = Object.assign({}, { json: body, returnData, method, ignoreError, }, fetcherOptions || {},);
-        return query.request(url, fetcherOptions);
+        body = fetcherData ?? body;
+        fetcherOptions = fetcherOptions ?? {};
+        fetcherOptions = {
+            json: body,
+            returnData,
+            method,
+            ignoreError,
+            ...fetcherOptions,
+        }
+        return rq.request(url, fetcherOptions);
     };
 
     return useRequest(fetcher, others);
 };
-useFetch.config = (options: QueryInit = {}) => {
-    query.config(options);
+useFetch.config = (options: RqInit = {}) => {
+    rq.config(options);
 }
-export { downloadfile, query, Query }
 export default useFetch;
