@@ -7,18 +7,17 @@ interface SorterType {
     field?: string;
     order?: 'ascend' | 'descend';
 }
-export interface TableState<TData> {
+export interface TableState<TData = any> {
     page: number;
     size: number;
     sorter: SorterType;
     data: TData;
     search: RecordType | null | undefined;
-    setState: (values: Partial<TableState<any>>) => void;
+    setState: (values: Partial<TableState>) => void;
+    ready: boolean;
 }
 
-type UseStoreType<TData> = () => TableState<TData>;
-
-
+type UseStoreType<TData> = (state?: TableState) => TableState<TData>;
 export interface TableInstance<TData = any> {
     useStore: UseStoreType<TData>;
     //执行搜索
@@ -64,7 +63,7 @@ export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'col
         form?: string;
         table?: string;
     }
-    styles?:{
+    styles?: {
         root?: React.CSSProperties;
         form?: React.CSSProperties;
         table?: React.CSSProperties;

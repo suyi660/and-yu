@@ -1,11 +1,11 @@
-import type { ProTableProps, UseTableProps, TableRef, TableState, } from './types';
-import { create, } from 'zustand';
-import { useRef, useMemo } from 'react';
+import type { ProTableProps, UseTableProps, } from './types';
+import { useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
-import { useMount, useToggle, useUpdate, useUpdateEffect } from 'ahooks';
+import { useMount, useUpdateEffect } from 'react-use';
 import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
 import useFetch from '../hooks/useFetch';
 import useX from '../hooks/useX';
+import useTable from './useTable'
 import './style.css'
 
 const defaultClassNames = {
@@ -63,10 +63,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     } = form;
 
     const formItems = formItem || items;
-    const [ready, { toggle }] = useToggle();
-    const { page, size, sorter, search, setState } = table.useStore();
-
-    const { data = {}, loading, mutate } = useFetch(url, {
+    const { data, page, size, sorter, search, ready, setState } = table.useStore();
+    const { loading, } = useFetch(url, {
         method,
         onBefore,
         json: ProTable.getQuery({
@@ -77,7 +75,11 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             urlParams,
         }),
         ready,
-        onFinally: toggle,
+        onFinally: () => {
+            setState({
+                ready: false
+            })
+        },
         onSuccess(data) {
             setState({
                 data,
@@ -99,7 +101,9 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         if (formItems) {
             table.form.submit();
         } else {
-            toggle();
+            setState({
+                ready: true,
+            })
         }
     };
     const onReset = () => {
@@ -107,7 +111,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             size: 10,
             sorter: {},
         });
-
         if (formItems) {
             if (formOnResetBefore?.() === false) return;
             table.form.resetFields();
@@ -119,8 +122,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     if (table) {
         table.run = onSearch;
-        table.clear = () => mutate({});
-        table.refresh = toggle;
         table.reset = () => {
             if (formItems) {
                 onReset();
@@ -137,7 +138,9 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         if (formItems) {
             table.form.submit();
         } else {
-            toggle();
+            setState({
+                ready: true,
+            })
         }
     });
 
@@ -149,8 +152,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         setState({
             page: 1,
             search: values,
+            ready: true,
         });
-        toggle();
     };
 
     const tableChange = (pagination: any, sorter: any) => {
@@ -158,8 +161,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             page: pagination.current,
             size: pagination.pageSize,
             sorter,
+            ready: true,
         });
-        toggle();
     };
     const x = useX(column);
     const y = scroll?.y;
@@ -167,7 +170,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     const renderTable = () => {
         return (
             <Table
-                columns={column}
+                columns={column as any}
                 loading={loading}
                 scroll={{ x, y }}
                 locale={locale}
@@ -238,42 +241,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     );
 };
 
-ProTable.useTable = (options: UseTableProps = {}) => {
-    const update = useUpdate();
-    const [form] = Form.useForm();
-    const tableRef = useRef<TableRef>(null);
-    if (!tableRef.current) {
-        const useStore = create<TableState<any>>((set) => ({
-            page: options.page ?? 1,
-            size: options.size ?? 10,
-            sorter: options.sorter || {},
-            search: {},
-            data: {},
-            setState(values = {}) {
-                set(values);
-            },
-        }));
-        tableRef.current = {
-            form,
-            //使用usestore 获取page,size,data,search， antd 
-            useStore: useStore,
-            run() { },
-            clear() { },
-            refresh: () => { },
-            reset: () => { },
-            sortOrder(key: string) {
-                const sorter = useStore.getState().sorter;
-                if (sorter && sorter.field === key) {
-                    return sorter.order;
-                }
-                return null
-            },
-            update,
-        };
-    }
-    return [tableRef.current];
-};
-
+ProTable.useTable = useTable;
 ProTable.getQuery = getQuery;
 ProTable.formatDate = formatDate;
 ProTable.removeEmpty = removeEmpty;
