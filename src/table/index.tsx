@@ -90,12 +90,12 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
 
     const { dataSource, total, column, renderAlert } = useMemo(() => {
         return {
-            column: typeof columns === 'function' ? columns(data as any) : columns,
+            column: typeof columns === 'function' ? columns(data as any, search,) : columns,
             dataSource: getDataSource<T>(data as any, dataKey),
-            renderAlert: typeof alert === 'function' ? alert(data as any) : alert,
+            renderAlert: typeof alert === 'function' ? alert(data as any, search,) : alert,
             total: getTotal(totalKey, data)
         };
-    }, [columns, data, dataKey, totalKey]);
+    }, [columns, data, dataKey, totalKey, search]);
 
     const onSearch = () => {
         if (formItems) {
