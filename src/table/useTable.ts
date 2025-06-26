@@ -16,6 +16,12 @@ const useTable = (options: UseTableProps = {}) => {
             size: options.size ?? 10,
             sorter: options.sorter || {},
             search: {},
+            params: {
+                page: options.page ?? 1,
+                size: options.size ?? 10,
+                sorter: options.sorter || {},
+                form: {}
+            },
             data: {},
             ready: false,
             setState(values = {}) {

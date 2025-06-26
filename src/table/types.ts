@@ -13,6 +13,7 @@ export interface TableState<TData = any> {
     sorter: SorterType;
     data: TData;
     search: RecordType | null | undefined;
+    params: any[] | Record<string, any> | null | undefined;
     setState: (values: Partial<TableState>) => void;
     ready: boolean;
 }
@@ -87,11 +88,11 @@ export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'col
     //发起请求时附加参数
     params?: RecordType;
     //antd table columns 支持函数返回一个列数组:参数data api返回数据,  一般使用function 时用于根据data，动态生成列
-    columns: ((data: Tdata, search?: any) => TableColumnType<unknown>[]) | TableColumnType<unknown>[];
+    columns: ((data: Tdata) => TableColumnType<unknown>[]) | TableColumnType<unknown>[];
     //search表单form配置
     form?: FormOptions;
     //统计提示
-    alert?: React.ReactNode | ((data: Tdata, search?: any) => React.ReactNode);
+    alert?: React.ReactNode | ((data: Tdata) => React.ReactNode);
     //操作按钮组,独立成一行
     toolbar?: React.ReactNode;
     pageSizeOptions?: number[];
