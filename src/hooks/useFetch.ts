@@ -5,7 +5,7 @@ import type { Result, Service } from 'ahooks/lib/useRequest/src/types'
 
 
 const useFetch = <TData = any>(url: string, options?: UseFetchOption<TData>): Result<TData, any[]> => {
-    const { ignoreError, returnData, method, json, data, ...others } = options || {};
+    const { ignoreError, returnData, method, json, data, headers, ...others } = options || {};
     let body = json ?? data;
 
     const fetcher: Service<any, any> = (fetcherData?: JsonData, fetcherOptions?: RqOptions) => {
@@ -19,6 +19,7 @@ const useFetch = <TData = any>(url: string, options?: UseFetchOption<TData>): Re
             returnData,
             method,
             ignoreError,
+            headers,
             ...fetcherOptions,
         }
         return rq.request(url, fetcherOptions);

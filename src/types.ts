@@ -1,6 +1,8 @@
 import type { Options, } from 'ahooks/lib/useRequest/src/types'
 
-export type Headers = Record<string, any> | FunctionType | HeadersInit;
+// export type HeadersInit = [string, string][] | Record<string, string> | Headers;
+
+// export type Headers = RequestInit["headers"]
 export type Method = "get" | "post" | "put" | "delete" | "patch" | undefined | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export type FunctionType = () => Record<string, any>;
 export type JsonData = Record<string, any> | any[] | null;
@@ -43,4 +45,5 @@ export interface UseFetchOption<TData = any> extends Options<TData, any[]> {
     json?: Record<string, unknown> | any[];
     data?: Record<string, unknown> | any[];
     method?: Method;
+    headers: HeadersInit;
 }
