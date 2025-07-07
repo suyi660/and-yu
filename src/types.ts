@@ -45,5 +45,5 @@ export interface UseFetchOption<TData = any> extends Options<TData, any[]> {
     json?: Record<string, unknown> | any[];
     data?: Record<string, unknown> | any[];
     method?: Method;
-    headers: HeadersInit;
+    headers?: HeadersInit;
 }
