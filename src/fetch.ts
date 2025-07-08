@@ -90,6 +90,7 @@ class Rq {
         const ignoreError = options.ignoreError;
         const codeKey = this.options.codeKey ?? 'code';
         const returnData = options.returnData ?? this.options.returnData;
+        const onLogout = options.onLogout ?? this.options.onLogout;
         options.headers = this.createHeaders(options.headers);
         options.method = options.method ?? (this.options.defaultMethod || defaultMethod);
 
@@ -140,7 +141,7 @@ class Rq {
                 return Promise.reject(data);
             }
             if (logoutCode.includes(currentCode)) {
-                this.options.onLogout?.(data);
+                onLogout?.(data);
             }
             this.options.onError?.(data);
             return Promise.reject(data)

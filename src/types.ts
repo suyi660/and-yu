@@ -37,6 +37,7 @@ export interface RqOptions extends RequestInit {
     //是否忽略当前的请求错误 配置为true,  则不会触发 onError callback
     ignoreError?: boolean;
     returnData?: boolean;
+    onLogout?: (error: any) => any;
 }
 
 export interface UseFetchOption<TData = any> extends Options<TData, any[]> {
@@ -46,4 +47,5 @@ export interface UseFetchOption<TData = any> extends Options<TData, any[]> {
     data?: Record<string, unknown> | any[];
     method?: Method;
     headers?: HeadersInit;
+    onLogout?: (error: any) => any;
 }
