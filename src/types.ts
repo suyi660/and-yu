@@ -1,8 +1,5 @@
 import type { Options, } from 'ahooks/lib/useRequest/src/types'
 
-// export type HeadersInit = [string, string][] | Record<string, string> | Headers;
-
-// export type Headers = RequestInit["headers"]
 export type Method = "get" | "post" | "put" | "delete" | "patch" | undefined | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 export type FunctionType = () => Record<string, any>;
 export type JsonData = Record<string, any> | any[] | null;
@@ -16,7 +13,7 @@ export interface RqInit {
     onError?: (error: any) => void;
     //退的code的回调函数->对应code?.logout
     onLogout?: (error: any) => void;
-    headers?: Headers;
+    headers?: HeadersInit | (() => HeadersInit);
     //响应数据状态码的key default: code
     codeKey?: string;
     // 返回response响应体 data层
