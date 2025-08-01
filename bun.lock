@@ -6,6 +6,7 @@
       "dependencies": {
         "@babel/runtime": "^7.26.9",
         "ahooks": "^3.8.4",
+        "dayjs": "^1.11.13",
         "react-use": "^17.6.0",
         "zustand": "^5.0.3",
       },
@@ -19,6 +20,7 @@
       },
       "peerDependencies": {
         "antd": "^5.25.2",
+        "dayjs": ">1",
         "react": ">=18.2",
         "react-dom": ">=18.2",
       },
