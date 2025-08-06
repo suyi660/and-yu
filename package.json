@@ -1,6 +1,6 @@
 {
   "name": "and-yu",
-  "version": "1.0.24",
+  "version": "2.0.0",
   "description": "yu",
   "module": "./es/index",
   "main": "./lib/index",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.26.9",
+    "@tanstack/react-query": "^5.84.1",
     "ahooks": "^3.8.4",
     "dayjs": "^1.11.13",
     "zustand": "^5.0.3",

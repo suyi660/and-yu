@@ -1,4 +1,5 @@
 import type { ProTableProps, UseTableProps, } from './types';
+import { useShallow } from 'zustand/react/shallow';
 import { useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
@@ -63,7 +64,17 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     } = form;
 
     const formItems = formItem || items;
-    const { data, page, size, sorter, search, ready, setState } = table.useStore();
+    const { data, page, size, sorter, search, ready, setState } = table.useStore(useShallow(state => {
+        return {
+            data: state.data,
+            page: state.page,
+            size: state.size,
+            sorter: state.sorter,
+            search: state.search,
+            ready: state.ready,
+            setState: state.setState,
+        };
+    }));
     const { loading, } = useFetch(url, {
         method,
         onBefore,

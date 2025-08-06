@@ -1,6 +1,9 @@
 export * from './utils'
 export { default as useFetch, } from './hooks/useFetch'
+export { default as useMutation, } from './hooks/useMutation'
+export { default as useQuery, } from './hooks/useQuery'
 export { default as useX, } from './hooks/useX'
-export { default as Table } from './table'
+export { default as Table } from './table_useFetch'
+export { default as TableQuery } from './table_useQuery'
 export { default as Rq, rq, downloadfile } from './fetch'
 

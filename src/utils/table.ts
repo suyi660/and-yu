@@ -46,7 +46,7 @@ export const getQuery = ({ page, size, sorter = {}, search = {}, urlParams = {} 
 }
 
 //总数量，可以动态指定读取的Key
-export const getTotal = <T extends Record<string, unknown>>(key: string, data: T,): number => {
+export const getTotal = <T = unknown>(key: string, data: T,): number => {
     if (Array.isArray(data)) return 0;
     if (key.includes('.')) {
         const keys = key.split('.');

@@ -1,5 +1,6 @@
 import type { FormInstance, TableColumnType, TableProps, FormProps } from 'antd';
 import type { Method } from '../types'
+import type { UseBoundStore, StoreApi } from 'zustand';
 
 type RecordType = Record<string, any>;
 
@@ -18,9 +19,13 @@ export interface TableState<TData = any> {
     ready: boolean;
 }
 
-type UseStoreType<TData> = (state?: TableState) => TableState<TData>;
+
+
+type UseStoreType<TData> = UseBoundStore<StoreApi<TableState<TData>>>;
 export interface TableInstance<TData = any> {
     useStore: UseStoreType<TData>;
+    // useQuery : queryKey
+    queryKey: any[];
     //执行搜索
     run: () => void;
     //清除列表数据
@@ -111,15 +116,4 @@ export interface UseTableProps {
     page?: number;
     size?: number;
     sorter?: SorterType;
-}
-
-export interface TableRef {
-    form: FormInstance;
-    useStore: UseStoreType<any>;
-    run: () => void;
-    clear: () => void;
-    refresh: () => void;
-    reset: () => void;
-    sortOrder: (key: string) => 'ascend' | 'descend' | null;
-    update: () => void;
 }
