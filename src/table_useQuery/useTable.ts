@@ -11,15 +11,15 @@ const useTable = (options: UseTableProps = {}) => {
     const tableRef = useRef<TableInstance>(null);
 
     if (!tableRef.current) {
-        const useStore = create<TableState>((set, get) => ({
+        const useStore = create<TableState>((set) => ({
             page: options.page ?? 1,
             size: options.size ?? 10,
-            sorter: options.sorter || {},
+            sorter: options.sorter ?? {},
             search: {},
             params: {
                 page: options.page ?? 1,
                 size: options.size ?? 10,
-                sorter: options.sorter || {},
+                sorter: options.sorter ?? {},
                 form: {}
             },
             data: {},
@@ -33,16 +33,8 @@ const useTable = (options: UseTableProps = {}) => {
             useStore: useStore,
             queryKey: [],
             run() { },
-            clear: () => {
-                useStore.setState({
-                    data: {},
-                })
-            },
-            refresh: () => {
-                useStore.setState({
-                    ready: true,
-                })
-            },
+            clear: () => { },
+            refresh: () => { },
             reset: () => { },
             sortOrder(key: string) {
                 const sorter = useStore.getState().sorter;

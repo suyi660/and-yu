@@ -1,5 +1,6 @@
 import type { ProTableProps, } from './types';
 import { useShallow } from 'zustand/react/shallow';
+import { useQueryClient } from '@tanstack/react-query'
 import { useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
@@ -63,6 +64,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     } = form;
 
     const formItems = formItem || items;
+    const queryClient = useQueryClient();
     const { page, size, sorter, search, ready, setState } = table.useStore(useShallow(state => {
         return {
             page: state.page,
@@ -83,7 +85,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             urlParams,
         })
     ];
-    const { data = {}, isLoading, } = useQuery({
+    const { data = {}, isLoading, refetch, } = useQuery({
         queryKey,
         method,
         onBefore,
@@ -125,6 +127,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
     if (table) {
         table.run = onSearch;
         table.queryKey = queryKey;
+        table.clear = () => queryClient.setQueryData(queryKey, {});
+        table.refresh = refetch;
         table.reset = () => {
             if (formItems) {
                 onReset();
