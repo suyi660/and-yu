@@ -12,7 +12,7 @@ interface Options extends UseMutationOptions {
 export default function useMutationHooks<TData = unknown>(options: Options): UseMutationResult<TData> {
     const {
         url,
-        method = 'POST',
+        method,
         headers,
         ...others
     } = options;
