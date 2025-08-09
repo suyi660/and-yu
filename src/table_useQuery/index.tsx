@@ -1,7 +1,7 @@
 import type { ProTableProps, } from './types';
 import { useShallow } from 'zustand/react/shallow';
 import { useQueryClient } from '@tanstack/react-query'
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
 import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
@@ -75,7 +75,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             setState: state.setState,
         };
     }));
-    const queryKey = [
+    const queryKey = useMemo(() => [
         url,
         ProTable.getQuery({
             page,
@@ -84,12 +84,13 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             search,
             urlParams,
         })
-    ];
-    const { data = {}, isLoading, refetch, } = useQuery({
+    ], [url, page, size, sorter, search, urlParams]);
+    const { data, isLoading, refetch, } = useQuery({
         queryKey,
         method,
         onBefore,
         enabled: ready,
+        placeholderData: {},
     });
 
     const { dataSource, total, column, renderAlert } = useMemo(() => {
@@ -124,17 +125,19 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         }
     };
 
-    if (table) {
-        table.run = onSearch;
-        table.queryKey = queryKey;
-        table.clear = () => queryClient.setQueryData(queryKey, {});
-        table.refresh = refetch;
-        table.reset = () => {
-            if (formItems) {
-                onReset();
-            }
-        };
-    }
+    useEffect(() => {
+        if (table) {
+            table.run = onSearch;
+            table.queryKey = queryKey;
+            table.clear = () => queryClient.setQueryData(queryKey, {});
+            table.refresh = refetch;
+            table.reset = () => {
+                if (formItems) {
+                    onReset();
+                }
+            };
+        }
+    }, [table, queryKey])
 
     useUpdateEffect(() => {
         table.update();
@@ -151,7 +154,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         }
     });
 
-    const onFinish = (values: Record<string, unknown>) => {
+    const onFinish = useCallback((values: Record<string, unknown>) => {
         if (formHandleValues) {
             values = formHandleValues(values);
         }
@@ -161,16 +164,16 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             search: values,
             ready: true,
         });
-    };
+    }, []);
 
-    const tableChange = (pagination: any, sorter: any) => {
+    const tableChange = useCallback((pagination: any, sorter: any) => {
         setState({
             page: pagination.current,
             size: pagination.pageSize,
             sorter,
             ready: true,
         });
-    };
+    }, []);
     const x = useX(column);
     const y = scroll?.y;
 
