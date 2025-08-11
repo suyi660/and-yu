@@ -169,5 +169,5 @@ export const downloadfile = (res: any) => {
     a.remove();
 }
 
-export const rq = new Rq();
+export const rq: Rq = new Rq();
 export default Rq;
