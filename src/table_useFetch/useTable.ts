@@ -11,7 +11,7 @@ const useTable = (options: UseTableProps = {}) => {
     const tableRef = useRef<TableRef>(null);
 
     if (!tableRef.current) {
-        const useStore = create<TableState>((set, get) => ({
+        const useStore = create<TableState>((set) => ({
             page: options.page ?? 1,
             size: options.size ?? 10,
             sorter: options.sorter || {},
