@@ -1,15 +1,5 @@
+import type { QueryOptions } from '../types';
 const isObject = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Object]';
-
-export interface QueryOptions {
-    page: number;
-    size: number;
-    //antd 返回的sorter对像
-    sorter: Record<string, any>;
-    //表单值
-    search: Record<string, any>;
-    //传入的params
-    urlParams: Record<string, any>;
-}
 
 //获取key对应的数据
 export const getDataSource = <T extends Record<string, unknown>>(data: T, key: string): T[] => {

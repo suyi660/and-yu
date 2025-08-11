@@ -1,9 +1,10 @@
-import type { ProTableProps, UseTableProps, } from './types';
+import type { ProTableProps, ProTableConfigOptions } from './types';
 import { useShallow } from 'zustand/react/shallow';
 import { useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
-import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
+import { getDataSource, getQuery, getTotal, formatDate, removeEmpty } from '../utils/table';
+import { isObject } from '../utils/util';
 import useFetch from '../hooks/useFetch';
 import useX from '../hooks/useX';
 import useTable from './useTable'
@@ -256,12 +257,17 @@ ProTable.useTable = useTable;
 ProTable.getQuery = getQuery;
 ProTable.formatDate = formatDate;
 ProTable.removeEmpty = removeEmpty;
+ProTable.pageSizeOptions = [10, 20, 50, 100];
 //自定义配置参数组合方式.  默认提供 page,size，orderField，isAsc，...urlParams,...search
-ProTable.config = (options: { getQuery?: (data: QueryOptions) => Record<string, unknown> } = {}) => {
+ProTable.config = (options: ProTableConfigOptions) => {
+    if (!options || !isObject(options)) return;
     if (options.getQuery) {
         ProTable.getQuery = options.getQuery;
     }
-}
+    if (options.pageSizeOptions) {
+        ProTable.pageSizeOptions = options.pageSizeOptions;
+    }
+};
 
 
 

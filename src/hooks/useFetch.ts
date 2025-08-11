@@ -1,5 +1,6 @@
 import { useRequest, } from 'ahooks'
-import { isObject, rq } from '../fetch'
+import { rq } from '../fetch'
+import { isObject } from '../utils/util';
 import type { RqInit, RqOptions, JsonData, Method } from '../types'
 import type { Result, Service } from 'ahooks/lib/useRequest/src/types'
 import type { Options, } from 'ahooks/lib/useRequest/src/types'

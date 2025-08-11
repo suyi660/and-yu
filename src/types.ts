@@ -34,3 +34,15 @@ export interface RqOptions extends RequestInit {
     returnData?: boolean;
     onLogout?: (error: any) => any;
 }
+
+
+export interface QueryOptions {
+    page: number;
+    size: number;
+    //antd 返回的sorter对像
+    sorter: Record<string, any>;
+    //表单值
+    search: Record<string, any>;
+    //传入的params
+    urlParams: Record<string, any>;
+}

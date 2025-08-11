@@ -8,6 +8,8 @@
     "declaration": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "paths": {
       "yu-component": [
         "./src/index.ts"

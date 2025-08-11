@@ -1,6 +1,7 @@
 
 import { useMutation } from '@tanstack/react-query'
-import { isObject, rq } from '../fetch'
+import { rq, } from '../fetch'
+import { isObject, } from '../utils/util'
 import type { UseMutationResult, UseMutationOptions } from '@tanstack/react-query'
 
 interface Options extends UseMutationOptions {

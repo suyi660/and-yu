@@ -1,6 +1,5 @@
 import { RqInit, RqOptions, FunctionType } from './types'
-export const isObject = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Object]';
-export const isFunction = (oj: unknown) => Object.prototype.toString.call(oj) === '[object Function]';
+import { isObject, isFunction } from './utils/util'
 
 const defaultSuccessCode = [200];
 const defaultLogoutCode = [403];

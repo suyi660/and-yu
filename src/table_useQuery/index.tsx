@@ -1,10 +1,11 @@
-import type { ProTableProps, } from './types';
+import type { ProTableProps, ProTableConfigOptions, } from './types';
 import { useShallow } from 'zustand/react/shallow';
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
-import { getDataSource, getQuery, getTotal, QueryOptions, formatDate, removeEmpty } from '../utils/table';
+import { getDataSource, getQuery, getTotal, formatDate, removeEmpty } from '../utils/table';
+import { isObject } from '../utils/util';
 import useQuery from '../hooks/useQuery';
 import useX from '../hooks/useX';
 import useTable from './useTable'
@@ -42,7 +43,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         form = {},
         alert,
         toolbar = null,
-        pageSizeOptions = [10, 20, 50, 100],
+        pageSizeOptions,
         onBefore,
         pagination,
         method,
@@ -191,7 +192,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                     showQuickJumper: pagination ? pagination.showQuickJumper : true,
                     showSizeChanger: pagination ? pagination.showSizeChanger : true,
                     hideOnSinglePage: pagination ? pagination.hideOnSinglePage : false,
-                    pageSizeOptions,
+                    pageSizeOptions: pageSizeOptions || ProTable.pageSizeOptions,
                     total,
                     showTotal(total) {
                         return `共 ${total} 条记录`;
@@ -255,12 +256,17 @@ ProTable.useTable = useTable;
 ProTable.getQuery = getQuery;
 ProTable.formatDate = formatDate;
 ProTable.removeEmpty = removeEmpty;
+ProTable.pageSizeOptions = [10, 20, 50, 100];
 //自定义配置参数组合方式.  默认提供 page,size，orderField，isAsc，...urlParams,...search
-ProTable.config = (options: { getQuery?: (data: QueryOptions) => Record<string, unknown> } = {}) => {
+ProTable.config = (options: ProTableConfigOptions) => {
+    if (!options || !isObject(options)) return;
     if (options.getQuery) {
         ProTable.getQuery = options.getQuery;
     }
-}
+    if (options.pageSizeOptions) {
+        ProTable.pageSizeOptions = options.pageSizeOptions;
+    }
+};
 
 
 
