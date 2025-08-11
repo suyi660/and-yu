@@ -86,12 +86,11 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             urlParams,
         })
     ], [url, page, size, sorter, search, urlParams]);
-    const { data, isLoading, refetch, } = useQuery({
+    const { data = {}, isLoading, refetch, } = useQuery({
         queryKey,
         method,
         onBefore,
         enabled: ready,
-        placeholderData: {},
     });
 
     const { dataSource, total, column, renderAlert } = useMemo(() => {
