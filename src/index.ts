@@ -6,4 +6,5 @@ export { default as useX, } from './hooks/useX'
 export { default as Table } from './table_useFetch'
 export { default as TableQuery } from './table_useQuery'
 export { default as Rq, rq, downloadfile } from './fetch'
+export type * from './types'
 
