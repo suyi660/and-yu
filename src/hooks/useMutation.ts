@@ -7,12 +7,14 @@ import type { UseMutationResult, UseMutationOptions } from '@tanstack/react-quer
 interface Options extends UseMutationOptions {
     url: string;
     method?: string;
+    json?: unknown;
     headers?: Record<string, string>;
 }
 
 export default function useMutationHooks<TData = unknown>(options: Options): UseMutationResult<TData> {
     const {
         url,
+        json,
         method,
         headers,
         ...others
@@ -24,7 +26,7 @@ export default function useMutationHooks<TData = unknown>(options: Options): Use
             }
             return rq.request(url, {
                 method,
-                json: data,
+                json: data ?? json,
                 headers,
             });
         },
