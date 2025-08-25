@@ -1,6 +1,6 @@
 {
   "name": "and-yu",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "yu",
   "module": "./es/index",
   "main": "./lib/index",
