@@ -1,7 +1,8 @@
 import type { ProTableProps, ProTableConfigOptions, } from './types';
+import { I18nContext, t } from '../components/TableConfig'
 import { useShallow } from 'zustand/react/shallow';
 import { useQueryClient } from '@tanstack/react-query'
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useContext } from 'react';
 import { Table, Form, Button, Space } from 'antd';
 import { useMount, useUpdateEffect } from 'react-use';
 import { getDataSource, getQuery, getTotal, formatDate, removeEmpty } from '../utils/table';
@@ -50,6 +51,8 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         scroll,
         ...prop
     } = props;
+
+    const { lang } = useContext(I18nContext);
 
     const {
         title: formTitle,
@@ -197,7 +200,7 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                     pageSizeOptions: pageSizeOptions || ProTable.pageSizeOptions,
                     total,
                     showTotal(total) {
-                        return `共 ${total} 条记录`;
+                        return `${t("共", lang)} ${total} ${t("条记录", lang)}`;
                     },
                 }}
                 dataSource={dataSource}
@@ -226,9 +229,9 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
                         <Form.Item>
                             <Space>
                                 <Button type="primary" loading={isLoading} htmlType="submit">
-                                    查询
+                                    {t('搜索', lang)}
                                 </Button>
-                                <Button onClick={onReset} disabled={isLoading}>重置</Button>
+                                <Button onClick={onReset} disabled={isLoading}>{t('重置', lang)}</Button>
                                 {formExtra}
                             </Space>
                         </Form.Item>

@@ -3,6 +3,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "baseUrl": "./",
     "jsx": "react-jsx",
     "declaration": true,
