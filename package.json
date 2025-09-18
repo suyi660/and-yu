@@ -1,6 +1,6 @@
 {
   "name": "and-yu",
-  "version": "2.0.14",
+  "version": "2.0.15",
   "description": "yu",
   "module": "./es/index",
   "main": "./lib/index",
@@ -19,7 +19,8 @@
   "license": "MIT",
   "files": [
     "es",
-    "lib"
+    "lib",
+    "lang"
   ],
   "devDependencies": {
     "@rc-component/father-plugin": "^2.1.3",

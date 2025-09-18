@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import zhCN from '../lang/zh_CN.json'
+import zhCN from '../../lang/zh_CN.json'
 
 interface Props {
     children: React.ReactNode,
