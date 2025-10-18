@@ -13,9 +13,13 @@ interface Options<TData, TError = unknown, TVariables = void, TOnMutateResult = 
     headers?: Record<string, string>;
 }
 
+type Result<TData, TError = unknown, TVariables = any, TOnMutateResult = unknown> = UseMutationResult<TData, TError, TVariables, TOnMutateResult> & {
+    mutate: (...args: any[]) => void;
+};
+
 export default function useMutationHooks<TData = unknown, TError = unknown, TVariables = void, TOnMutateResult = unknown>(
     options: Options<TData, TError, TVariables, TOnMutateResult>
-): UseMutationResult<TData, TError, TVariables, TOnMutateResult> {
+): Result<TData, TError, TVariables, TOnMutateResult> {
     const {
         url,
         json,
