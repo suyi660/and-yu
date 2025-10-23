@@ -103,6 +103,8 @@ export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'col
     pageSizeOptions?: number[];
     //发送请求前
     onBefore?: () => void;
+    //请求成功后
+    onSuccess?: (data: Tdata) => any;
     pagination?: {
         showQuickJumper?: boolean;
         showSizeChanger?: boolean;
@@ -110,6 +112,8 @@ export interface ProTableProps<Tdata = any> extends Omit<TableProps<Tdata>, 'col
     };
     loadingDelay?: number;
     method?: Method;
+    //开启后 useStore()会返回 api data数据
+    useData?: boolean;
 }
 
 export interface UseTableProps {

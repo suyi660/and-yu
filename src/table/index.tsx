@@ -46,9 +46,11 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         toolbar = null,
         pageSizeOptions,
         onBefore,
+        onSuccess,
         pagination,
         method,
         scroll,
+        useData,
         ...prop
     } = props;
 
@@ -90,12 +92,23 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         }),
         forceKey.current,
     ], [url, page, size, sorter, search, urlParams]);
-    const { data = {}, isLoading, refetch, } = useQuery({
+    const { data = {}, isLoading, refetch, isSuccess } = useQuery({
         queryKey,
         method,
         onBefore,
         enabled: ready,
     });
+
+    useUpdateEffect(() => {
+        if (useData) {
+            setState({
+                data,
+            })
+        }
+    }, [data])
+    useUpdateEffect(() => {
+        onSuccess?.(data as any)
+    }, [isSuccess])
 
     const { dataSource, total, column, renderAlert } = useMemo(() => {
         return {
