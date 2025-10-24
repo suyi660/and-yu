@@ -11,7 +11,7 @@ const useTable = (options: UseTableProps = {}) => {
     const tableRef = useRef<TableInstance>(null);
 
     if (!tableRef.current) {
-        const useStore = create<TableState>((set) => ({
+        const initState = {
             page: options.page ?? 1,
             size: options.size ?? 10,
             sorter: options.sorter ?? {},
@@ -24,6 +24,9 @@ const useTable = (options: UseTableProps = {}) => {
             },
             data: {},
             ready: false,
+        }
+        const useStore = create<TableState>((set) => ({
+            ...initState,
             setState(values = {}) {
                 set(values);
             },
@@ -42,6 +45,9 @@ const useTable = (options: UseTableProps = {}) => {
                     return sorter.order;
                 }
                 return null
+            },
+            resetStore() {
+                useStore.getState().setState(initState);
             },
             update,
         };

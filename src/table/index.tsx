@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useEffect, useMemo, useRef, useContext } from 'react';
 import { Table, Form, Button, Space } from 'antd';
-import { useMount, useUpdateEffect } from 'react-use';
+import { useMount, useUnmount, useUpdateEffect } from 'react-use';
 import { getDataSource, getQuery, getTotal, formatDate, removeEmpty } from '../utils/table';
 import { isObject } from '../utils/util';
 import useQuery from '../hooks/useQuery';
@@ -81,6 +81,10 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
             setState: state.setState,
         };
     }));
+
+    useUnmount(() => {
+        table.resetStore();
+    })
     const queryKey = useMemo(() => [
         url,
         ProTable.getQuery({

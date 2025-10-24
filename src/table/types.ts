@@ -37,6 +37,8 @@ export interface TableInstance<TData = any> {
     //排序  table.sortOrder('列名')
     sortOrder: (key: string) => any;
     update: () => void;
+    //重置store状态
+    resetStore: () => void;
     form?: FormInstance;
 }
 
