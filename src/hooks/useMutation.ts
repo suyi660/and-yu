@@ -15,6 +15,7 @@ interface Options<TData, TError = unknown, TVariables = void, TOnMutateResult = 
 
 type Result<TData, TError = unknown, TVariables = any, TOnMutateResult = unknown> = UseMutationResult<TData, TError, TVariables, TOnMutateResult> & {
     mutate: (...args: any[]) => void;
+    mutateAsync: (...args: any[]) => void;
 };
 
 export default function useMutationHooks<TData = unknown, TError = unknown, TVariables = void, TOnMutateResult = unknown>(
