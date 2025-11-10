@@ -51,6 +51,15 @@ const useTable = (options: UseTableProps = {}) => {
             },
             update,
         };
+        useStore.subscribe((state, prevState) => {
+            if (
+                state.sorter !== prevState.sorter &&
+                state.sorter?.order !== prevState.sorter?.order
+            ) {
+                tableRef.current = { ...tableRef.current };
+                update();
+            }
+        });
     }
     return [tableRef.current];
 }

@@ -160,10 +160,6 @@ const ProTable = <T extends Record<string, any>>(props: ProTableProps<T>) => {
         }
     }, [table, queryKey])
 
-    useUpdateEffect(() => {
-        table.update();
-    }, [sorter]);
-
     useMount(() => {
         if (manual) return;
         if (formItems) {

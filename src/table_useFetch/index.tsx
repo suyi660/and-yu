@@ -2,7 +2,7 @@ import type { ProTableProps, ProTableConfigOptions } from './types';
 import { useShallow } from 'zustand/react/shallow';
 import { useMemo } from 'react';
 import { Table, Form, Button, Space } from 'antd';
-import { useMount, useUpdateEffect } from 'react-use';
+import { useMount, } from 'react-use';
 import { getDataSource, getQuery, getTotal, formatDate, removeEmpty } from '../utils/table';
 import { isObject } from '../utils/util';
 import useFetch from '../hooks/useFetch';
